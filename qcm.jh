@@ -1,0 +1,122 @@
+ 
+enum TypeQuestion {
+    YES_NO, 
+    CHOIX_MULTIPLE, 
+    CHOIX_IMAGE,
+    CHAMPS_LIBRE
+}
+
+entity Tag
+{
+	libelle String
+    code String  
+}
+
+entity Categorie
+{
+    code String required  minlength(1)
+	libelle String 
+}
+
+
+
+entity Qcm  {
+	name String required  minlength(3),
+    nbQuestion Integer
+    privee Boolean
+}
+
+entity QcmQuestion  {
+	libelle String required
+    type TypeQuestion 
+    explication TextBlob 
+}
+
+entity QcmQuestionTag  {
+
+}
+entity QcmReponse  {
+	reponseText String
+    reponseImage ImageBlob  
+    reponseNombre Double
+    correct Boolean 
+    poids Long
+}
+
+entity QcmTest
+{
+	dateDebut Instant
+    dateFin Instant
+    email String 
+    score Double
+    highScore Double
+}
+
+entity QcmTestResponse
+{
+    dateSoumission Instant
+}
+
+entity Utilisateur {
+	lastname String,
+    firstname String, 
+    email String, 
+    linkedin String, 
+    googleplus String, 
+    role String
+}
+
+entity SocieteAbonne
+{
+	name String required
+    dateAbonnement Instant
+    logo ImageBlob
+}
+
+entity CarnetAdresse
+{
+	lastname String,
+    firstname String, 
+    email String, 
+}
+
+
+entity Country {
+	libelle String
+    code String
+}
+
+relationship OneToMany {
+	QcmQuestionTag{idQcmQuestion} to QcmQuestion
+    QcmQuestionTag{idTag} to Tag
+    }
+relationship OneToMany {
+	Qcm{createBy} to Utilisateur
+    Qcm{idCategorie} to Categorie
+    QcmQuestion {idQcm} to Qcm    
+    QcmReponse{idQcmQuestion} to QcmQuestion
+    QcmTestResponse{idQcmTest} to QcmTest
+	QcmTestResponse{idQcmQuestion} to QcmQuestion
+    QcmTestResponse{idQcmReponse} to QcmReponse 
+    QcmTest{idQcm} to  Qcm
+    QcmTest{idUtilisateur} to  Utilisateur
+    Utilisateur{idCountry} to Country
+    Utilisateur{idSociete} to SocieteAbonne
+}
+
+ 
+
+  
+
+// Set pagination options
+paginate all with infinite-scroll
+//paginate Job with pagination
+
+// Use Data Transfert Objects (DTO)
+ dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceClass
+
+// Set an angular suffix
+// angularSuffix * with mySuffix
