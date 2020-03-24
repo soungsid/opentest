@@ -10,25 +10,18 @@ import { ActivateService } from './activate.service';
   templateUrl: './activate.component.html'
 })
 export class ActivateComponent implements OnInit {
-  error: string;
-  success: string;
+  error = false;
+  success = false;
 
   constructor(private activateService: ActivateService, private loginModalService: LoginModalService, private route: ActivatedRoute) {}
 
-  ngOnInit() {
-    this.route.queryParams.pipe(flatMap(params => this.activateService.get(params.key))).subscribe(
-      () => {
-        this.error = null;
-        this.success = 'OK';
-      },
-      () => {
-        this.success = null;
-        this.error = 'ERROR';
-      }
-    );
+  ngOnInit(): void {
+    this.route.queryParams
+      .pipe(flatMap(params => this.activateService.get(params.key)))
+      .subscribe(() => (this.success = true), () => (this.error = true));
   }
 
-  login() {
+  login(): void {
     this.loginModalService.open();
   }
 }
